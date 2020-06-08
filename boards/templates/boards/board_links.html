@@ -1,0 +1,10 @@
+<div class="board-header row">
+    <ul class="inline-list">
+        {% for b in boards %}
+            <li>[ <a href="{{ b.get_absolute_url }}" title="{{ b|stringformat:'s' }}">{{ b|stringformat:'s' }}</a> ]</li>
+        {% endfor %}
+    </ul>
+    <ul class="inline-list">
+        <li>[ <a href="/">Home</a> ]</li>
+    </ul>
+</div>

@@ -1,0 +1,26 @@
+{% load humanize %}
+
+<div class="clearfix post-container" id="p{{ p.pk }}">
+    <div class="post-arrows">&gt;&gt;</div>
+    <div class="clearfix pseudo-post-container">
+        <div class="reply-header">
+            <span class="post-id">#{{ p.pk }}</span>
+            {% if p.title %}<span><b>{{ p.title }}</b></span>&nbsp;{% endif %}
+            {% if p.name %}<span class="poster-name">{{ p.name }}</span>{% else %}<span class="poster-name anon">Anonymous</span>{% endif %}&nbsp;
+            <span title="{{ p.created_at|naturaltime }}">{{ p.created_at }}</span>
+            {% if p.quoted_in_set.exists %}
+            (<span class="text-disabled">Quoted in:</span>
+            {% for pq in p.quoted_in_set.all %}<a class="quoted-post-to-link" href="#p{{ pq.pk }}">&gt;&gt;{{ pq.pk }}</a>{% endfor %})
+            {% endif %}
+        </div>
+        {% if p.has_image %}
+            <div class="post-image-container">
+                <a class="post-image-link" href="{{ p.get_image_download_url }}" data-full-src="{{ p.get_image_url }}" data-thumb-src="{{ p.get_small_thumbnail }}">
+                    <img class="post-image" src="{{ p.get_small_thumbnail }}" alt="Post image" />
+                </a>
+            </div>
+            <div class="image-info" style="display: initial;">File: <a href="{{ p.get_image_download_url }}" target="_blank">{{ p.file_name }}</a> ({{ p.file_size|filesizeformat }}, {{ p.file_width }}x{{ p.file_height }}) </div>
+        {% endif %}
+        <div class="post-body">{{ p.body | safe }}</div>
+    </div>
+</div>

@@ -1,0 +1,56 @@
+<div class="post-form">
+    <h4 class="text-center">— Start a new thread —</h4>
+    <form action="" enctype="multipart/form-data" method="post">
+        {% csrf_token %}
+        <table>
+            <tbody>
+                {% if post_form.errors %}
+                    <tr>
+                        <td colspan="2" style="border: none;background-color: inherit;padding: 0 0 1rem 0;">
+                            <p>Please correct the following errors:</p>
+                            <ul class="errors-list">
+                                {% for ek, ev in post_form.errors.items %}
+                                    {% for error in ev %}
+                                        <li>{{ error|escape }}</li>
+                                    {% endfor %}
+                                {% endfor %}
+                            </ul>
+                        </td>
+                    </tr>
+                {% endif %}
+                <tr>
+                    <td title="Your name. Not required. Will show you as `Anonymous` if left empty.">{{ post_form.name.label_tag }}</td>
+                    <td>{{ post_form.name }}</td>
+                </tr>
+                <tr>
+                    <td title="Title of the post. Required if content is empty.">{{ post_form.title.label_tag }}</td>
+                    <td>{{ post_form.title }}</td>
+                </tr>
+                <tr>
+                    <td style="vertical-align: top;" title="Content of the post. Required if title is empty.">
+                        <label for="{{ post_form.body.id_for_label }}">Content:</label>
+                    </td>
+                    <td>{{ post_form.body }}</td>
+                </tr>
+                <tr>
+                    <td title="An image file. Required.">{{ post_form.file.label_tag }}</td>
+                    <td>{{ post_form.file }}</td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="border: none;background-color: inherit;padding: 1rem 0;">
+                        <button title="Clear all fields" type="reset">Clear</button>
+                        <button title="Create new post" type="submit">Submit</button>
+                    </td>
+                </tr>
+                <tr>
+                    <td colspan="2" style="border: none;background-color: inherit;padding: 0 0 1rem 0;">
+                        <ul class="rules-list">
+                            <li>An image file is required. Maximum allowed size is 20MB.</li>
+                            <li>Title is required if no content is provided and vice versa.</li>
+                        </ul>
+                    </td>
+                </tr>
+            </tbody>
+        </table>
+    </form>
+</div>

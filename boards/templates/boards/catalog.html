@@ -1,0 +1,53 @@
+{% extends 'root/base.html' %}
+
+{% load humanize %}
+{% load static %}
+
+{% block head_staticfiles %}
+    <link href="{% static 'boards/css/slug.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+<div id="root">
+    {% include 'boards/board_links.html' %}
+
+    {% include 'boards/board_info.html' %}
+
+    {% include 'boards/thread_form.html' %}
+
+    {% include "boards/slug_menu.html" %}
+
+    {% include "boards/slug_paginator.html" with pclass="bb" %}
+
+    <div class="threads-container row catalog">
+        {% if thread_count > 0 %}
+            {% for t in threads %}
+                <div class="card">
+                    <div class="card-body">
+                        <div class="post-image-container">
+                            <a href="{{ t.get_absolute_url }}">
+                                <img src="{{ t.get_small_thumbnail }}" alt="Post image" />
+                            </a>
+                        </div>
+                        <div class="text-center">
+                            <p class="text-disabled"><span class="pre">Replies: <b>{{ t.ctx.reply_count }}</b></span> | <span class="pre">Images: <b>{{ t.ctx.reply_with_image_count|add:1 }}</b></span></p>
+                            <p>{% if t.title %}<span><b>{{ t.title }}</b></span>{% endif %}{% if t.title and t.body %}:&nbsp;{% endif %}{% if t.body %}<span>{{ t.body|truncatechars:200 }}</span>{% endif %}</p>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        {% else %}
+            <h4>No threads yet!</h4>
+        {% endif %}
+    </div>
+
+    {% include "boards/slug_paginator.html" with pclass="bt" %}
+
+    {% include "boards/slug_menu.html" with bottom=True %}
+
+    <div class="fluke"></div>
+    {% include 'boards/board_links.html' %}
+
+    {% include "boards/footer.html" %}
+</div>
+{% endblock %}

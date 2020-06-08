@@ -1,0 +1,56 @@
+{% extends 'root/base.html' %}
+
+{% load static %}
+
+{% block head_staticfiles %}
+    <link href="{% static 'root/css/index.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+<div id="root">
+    <div class="fluke"></div>
+    <div style="margin-bottom: var(--spacing-lg);">
+        <img class="site-logo" src="{% static 'root/png/djangoib_logo.png' %}" alt="DjangoIB Logo" />
+    </div>
+    <div class="card">
+        <div class="card-body">
+            <div class="site-header-container row">
+                <div>
+                    DjangoIB is an image-based bulletin board where you can post comments and share images. There are boards dedicated to a variety of topics. You do not need to register an account before participating in the community. Feel free to click on a board below that interests you and jump right in!
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="mx-0">Boards</h3>
+        </div>
+        <div class="card-body">
+            <div class="boards-list-container row">
+                {% for bucket in board_buckets %}
+                    {% if bucket %}
+                        <ul class="boards-list">
+                            {% for board in bucket %}
+                                <li class="boards-list-item">
+                                    <a href="{{ board.get_absolute_url }}">/{{ board.slug }}/ - {{ board.title }}</a>
+                                </li>
+                            {% endfor %}
+                        </ul>
+                    {% endif %}
+                {% endfor %}
+            </div>
+        </div>
+    </div>
+    <div class="card">
+        <div class="card-header">
+            <h3 class="mx-0">Statistics</h3>
+        </div>
+        <div class="card-body">
+            Some stats
+        </div>
+    </div>
+    <div class="site-footer">
+        <div class="text-center"><small>Copyright © 2020 DjangoIB. All rights reserved.</small></div>
+    </div>
+</div>
+{% endblock %}

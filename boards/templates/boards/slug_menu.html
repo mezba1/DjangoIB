@@ -1,0 +1,42 @@
+<div class="board-menu row">
+    <div class="search-input-container">
+        <form action="{% if archive %}{{ board.get_absolute_url }}archive/{% else %}{{ board.get_absolute_url }}catalog/{% endif %}" method="get">
+            <label for="bsearch">Search</label>
+            <input id="bsearch" type="text" name="q" placeholder="Search threads..." value="{{ search_query|default:'' }}" />
+        </form>
+    </div>
+    <ul class="inline-list" style="margin-left: 0.5rem;">
+        {% if thread %}
+            <li>[ <a href="{{ board.get_absolute_url }}">Return</a> ]</li>
+        {% endif %}
+        {% if catalog %}
+            <li>[ <a href="{{ board.get_absolute_url }}">Return</a> ]</li>
+            <li>[ <b>Catalog</b> ]</li>
+            <li>[ <a href="{{ board.get_absolute_url }}archive/">Archive</a> ]</li>
+        {% elif archive %}
+            <li>[ <a href="{{ board.get_absolute_url }}">Return</a> ]</li>
+            <li>[ <a href="{{ board.get_absolute_url }}catalog/">Catalog</a> ]</li>
+            <li>[ <b>Archive</b> ]</li>
+        {% else %}
+            <li>[ <a href="{{ board.get_absolute_url }}catalog/">Catalog</a> ]</li>
+            <li>[ <a href="{{ board.get_absolute_url }}archive/">Archive</a> ]</li>
+        {% endif %}
+        {% if bottom %}
+            <li>[ <a href="#top">Top</a> ]</li>
+        {% else %}
+            <li>[ <a href="#bottom">Bottom</a> ]</li>
+        {% endif %}
+        {% if search %}
+            <li>—</li>
+            <li>Showing results for <b>"{{ search_query }}"</b></li>
+        {% endif %}
+    </ul>
+    {% if thread %}
+        <ul class="inline-list" style="margin-left: auto;">
+            <li class="text-disabled">Thread stats —</li>
+            <li>Replies: <b>{{ reply_count }}</b></li>
+            <li>|</li>
+            <li>Images: <b>{{ reply_with_image_count|add:1 }}</b></li>
+        </ul>
+    {% endif %}
+</div>

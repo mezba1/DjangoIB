@@ -1,0 +1,20 @@
+{% if pages %}
+    <div class="paginator-container {{ pclass }}">
+        <ul class="inline-list paginator-list">
+            <li>Pages:</li>
+            {% for pg in pages %}
+                <li>[ <a href="{{ board.get_absolute_url }}{{ pg }}/">{% if pg == page %}<b>{{ pg }}</b>{% else %}{{ pg }}{% endif %}</a> ]</li>
+            {% endfor %}
+            {% if page_previous %}
+                <li>
+                    [ <a href="{{ board.get_absolute_url }}{{ page|add:'-1' }}/">Previous</a> ]
+                </li>
+            {% endif %}
+            {% if page_next %}
+                <li>
+                    [ <a href="{{ board.get_absolute_url }}{{ page|add:'1' }}/">Next</a> ]
+                </li>
+            {% endif %}
+        </ul>
+    </div>
+{% endif %}

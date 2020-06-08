@@ -1,0 +1,12 @@
+#root {
+    margin: 0 auto;
+    min-width: 768px;
+    width: 992px;
+}
+
+.boards-list {
+    list-style: none;
+    flex: 0 0 25%;
+    margin: 0;
+    padding: 0;
+}

@@ -1,0 +1,97 @@
+.board-header {
+    font-size: var(--font-xs);
+    padding: var(--spacing-md) var(--spacing-sm);
+}
+
+.board-info {
+    margin: 1.5rem 0;
+}
+
+.board-menu {
+    align-items: center;
+    border-bottom: 1px solid var(--light-4);
+    border-top: 1px solid var(--light-4);
+    padding: var(--spacing-md) 0;
+}
+
+.inline-list {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+}
+
+.inline-list > li,
+.paginator-list > li {
+    display: inline-block;
+    white-space: pre;
+}
+
+.replies-container .post-container {
+    background-color: burlywood;
+    display: table;
+    margin-left: 16px;
+    position: relative;
+}
+
+.replies-container .post-container::before {
+    content: ">>";
+    position: absolute;
+    left: -15px;
+}
+
+.paginator-container {
+    padding: 0.5rem 0;
+}
+
+.post-form input {
+    width: 100%;
+}
+
+.post-form table {
+    margin: 0 auto;
+}
+
+.post-form table tr td {
+    margin: 0;
+    padding: 0;
+}
+
+.post-form table tr td:first-child {
+    background-color: var(--light-4);
+    border: 1px solid var(--light-2);
+    border-radius: var(--border-radius);
+    padding: 0 var(--spacing-md);
+}
+
+.post-form table tr td textarea {
+    display: block;
+}
+
+.posts-container {
+    padding: 20px 0;
+}
+
+.search-input-container label {
+    display: none;
+}
+
+.rules-list,
+.errors-list {
+    margin: 0;
+    padding: 0;
+}
+
+.rules-list li,
+.errors-list li {
+    list-style: none;
+}
+
+.rules-list li::before,
+.errors-list li::before {
+    content: "\2022 \20";
+}
+
+.thread-container:not(:last-child) {
+    border-bottom: 1px solid var(--light-4);
+    padding-bottom: 10px;
+}

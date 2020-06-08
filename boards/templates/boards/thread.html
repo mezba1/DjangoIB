@@ -1,0 +1,112 @@
+{% extends 'root/base.html' %}
+
+{% load humanize %}
+{% load static %}
+
+{% block head_staticfiles %}
+    <link href="{% static 'boards/css/slug.css' %}" rel="stylesheet" />
+    <link href="{% static 'boards/css/thread.css' %}" rel="stylesheet" />
+{% endblock %}
+
+{% block content %}
+<div id="root">
+    {% include 'boards/board_links.html' %}
+
+    {% include 'boards/board_info.html' %}
+
+    <div class="post-form">
+        <h4 class="text-center">— Post a reply —</h4>
+        <form action="" enctype="multipart/form-data" method="post">
+            {% csrf_token %}
+            <table>
+                <tbody>
+                    {% if post_form.errors %}
+                        <tr>
+                            <td colspan="2" style="border: none;background-color: inherit;padding: 0 0 1rem 0;">
+                                <p>Please correct the following errors:</p>
+                                <ul class="errors-list">
+                                    {% for ek, ev in post_form.errors.items %}
+                                        {% for error in ev %}
+                                            <li>{{ error|escape }}</li>
+                                        {% endfor %}
+                                    {% endfor %}
+                                </ul>
+                            </td>
+                        </tr>
+                    {% endif %}
+                    <tr>
+                        <td title="Your name. Not required. Will show you as `Anonymous` if left empty.">{{ post_form.name.label_tag }}</td>
+                        <td>{{ post_form.name }}</td>
+                    </tr>
+                    <tr>
+                        <td style="vertical-align: top;" title="Content of the reply. Required if no image is provided.">
+                            <label for="{{ post_form.body.id_for_label }}">Content:</label>
+                        </td>
+                        <td>{{ post_form.body }}</td>
+                    </tr>
+                    <tr>
+                        <td title="An image file. Required if no content is provided.">{{ post_form.file.label_tag }}</td>
+                        <td>{{ post_form.file }}</td>
+                    </tr>
+                    <tr>
+                        <td colspan="2" style="border: none;background-color: inherit;padding: 1rem 0;">
+                            <button title="Clear all fields" type="reset">Clear</button>
+                            <button title="Create new post" type="submit">Submit</button>
+                        </td>
+                    </tr>
+                <tr>
+                    <td colspan="2" style="border: none;background-color: inherit;padding: 0 0 1rem 0;">
+                        <ul class="rules-list">
+                            <li>Maximum allowed image size is 20MB.</li>
+                            <li>Content is required if no image file is provided and vice versa.</li>
+                        </ul>
+                    </td>
+                </tr>
+                </tbody>
+            </table>
+        </form>
+    </div>
+
+    {% include "boards/slug_menu.html" %}
+
+    <div class="clearfix thread-container">
+        <div class="post-container op" id="p{{ thread.pk }}">
+            <div class="image-info">File: <a href="{{ thread.get_image_download_url }}" target="_blank">{{ thread.file_name }}</a> ({{ thread.file_size|filesizeformat }}, {{ thread.file_width }}x{{ thread.file_height }}) </div>
+            <div class="post-image-container">
+                <a class="post-image-link" href="{{ thread.get_image_download_url }}" data-full-src="{{ thread.get_image_url }}" data-thumb-src="{{ thread.get_thumbnail }}">
+                    <img class="post-image" src="{{ thread.get_thumbnail }}" alt="Post image" />
+                </a>
+            </div>
+            <div>
+                <span class="post-id">#{{ thread.pk }}</span>
+                {% if thread.title %}<span><b>{{ thread.title }}</b></span>&nbsp;{% endif %}
+                {% if thread.name %}<span class="poster-name">{{ thread.name }}</span>{% else %}<span class="poster-name anon">Anonymous</span>{% endif %}&nbsp;
+                <span title="{{ thread.created_at|naturaltime }}">{{ thread.created_at }}</span>
+                {% if thread.quoted_in_set.exists %}
+                (<span class="text-disabled">Quoted in:</span>
+                {% for pq in thread.quoted_in_set.all %}<a class="quoted-post-to-link" href="#p{{ pq.pk }}">&gt;&gt;{{ pq.pk }}</a>{% endfor %})
+                {% endif %}
+            </div>
+            <div class="post-body">{{ thread.body | safe }}</div>
+        </div>
+        {% if reply_count > 0 %}
+            {% for p in replies %}
+                {% include "boards/reply.html" %}
+            {% endfor %}
+        {% else %}
+            <h4>No replies yet!</h4>
+        {% endif %}
+    </div>
+
+    {% include "boards/slug_menu.html" with bottom=True %}
+
+    <div class="fluke"></div>
+    {% include 'boards/board_links.html' %}
+
+    {% include "boards/footer.html" %}
+</div>
+{% endblock %}
+
+{% block body_scripts %}
+    <script src="{% static 'boards/js/b.js' %}" type="text/javascript"></script>
+{% endblock %}
