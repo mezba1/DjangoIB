@@ -1,2 +1,2 @@
-release: python manage.py migrate
+release: bash ./scripts/heroku-release.sh
 web: gunicorn djangoib.wsgi
