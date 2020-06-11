@@ -32,8 +32,6 @@ class Board(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(default=timezone.now)
 
-    image_field = 'logo'
-
     def __str__(self):
         return '/{}/ - {}'.format(self.slug, self.title)
 
