@@ -32,37 +32,14 @@ class ReplyCreationForm(forms.ModelForm):
         }
 
 
-class AdminBoardCreationForm(forms.ModelForm):
+class AdminBoardForm(forms.ModelForm):
     class Meta:
         model = models.Board
-        # fields = ['file_delete_hash', 'file_height', 'file_size', 'file_url', 'file_width', 'updated_at']
-        exclude = []
+        exclude = ['created_at', 'updated_at']
 
 
-class AdminBoardChangeForm(forms.ModelForm):
-    # password = ReadOnlyPasswordHashField(label=("Password"),
-    #                                      help_text=("Raw passwords are not stored, so there is no way to see "
-    #                                                 "this post's password, but you can change the password "
-    #                                                 "using <a href=\"../password/\">this form</a>."))
-
-    class Meta:
-        model = models.Board
-        exclude = []
-
-
-class AdminPostCreationForm(forms.ModelForm):
+class AdminPostForm(forms.ModelForm):
     class Meta:
         model = models.Post
-        # fields = ['file_delete_hash', 'file_height', 'file_size', 'file_url', 'file_width', 'updated_at']
-        exclude = []
-
-
-class AdminPostChangeForm(forms.ModelForm):
-    # password = ReadOnlyPasswordHashField(label=("Password"),
-    #                                      help_text=("Raw passwords are not stored, so there is no way to see "
-    #                                                 "this post's password, but you can change the password "
-    #                                                 "using <a href=\"../password/\">this form</a>."))
-
-    class Meta:
-        model = models.Post
-        exclude = []
+        exclude = ['created_at', 'file_delete_hash', 'file_height', 'file_name', 'file_size', 'file_url',
+                   'file_width', 'ip_address', 'updated_at']
