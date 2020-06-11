@@ -222,9 +222,6 @@ class Post(models.Model):
         else:
             self._clear_file_fields()
 
-    def process_content(self):
-        pass
-
     def process_image(self):
         field_name = self.image_field
         img = getattr(self, field_name, None)
@@ -273,18 +270,20 @@ class Post(models.Model):
 
     def save(self, *args, **kwargs):
         self.full_clean()
-        quoted_post_ids = self.process_body()
-        self.process_content()
-        self.process_image()
         if self.pk:
             self.updated_at = timezone.now()
+            instance = super().save(*args, **kwargs)
+        else:
+            self.process_image()
+            quoted_post_ids = self.process_body()
+            instance = super().save(*args, **kwargs)
+            self.quoted_posts.clear()
+            for i in quoted_post_ids:
+                self.quoted_posts.add(i)
         if self.parent:
             self.parent.updated_at = self.updated_at
             self.parent.save()
-        instance = super().save(*args, **kwargs)
-        self.quoted_posts.clear()
-        for i in quoted_post_ids:
-            self.quoted_posts.add(i)
+
         return instance
 
     class Meta:
