@@ -49,7 +49,7 @@ class Board(models.Model):
         return '/{}/ - {}'.format(self.slug, self.title)
 
     def get_absolute_url(self):
-        return reverse('boards-slug', args=[self.slug])
+        return reverse('dib-board-index', args=[self.slug])
 
     def save(self, *args, **kwargs):
         self.full_clean()
@@ -203,7 +203,7 @@ class Post(models.Model):
             return False
 
     def get_absolute_url(self):
-        return reverse('thread', args=[self.board.slug, self.pk])
+        return reverse('dib-thread-index', args=[self.board.slug, self.pk])
 
     def get_image_url(self):
         field_name = self.image_field
@@ -255,7 +255,7 @@ class Post(models.Model):
             self._process_file_fields()
 
     def process_body(self):
-        if self.body:
+        if self.body and self.parent:
             quotable_post_ids = []
             op_id = self.parent.pk
             if self.parent:
@@ -267,7 +267,6 @@ class Post(models.Model):
             return []
 
     def clean(self):
-        # Custom validations
         if not self.parent:
             if not self.file and not self.has_image():
                 raise ValidationError({'file': ['File is required for a thread (post having no parent).']})
@@ -288,7 +287,6 @@ class Post(models.Model):
             self.process_image()
             quoted_post_ids = self.process_body()
             instance = super().save(*args, **kwargs)
-            self.quoted_posts.clear()
             for i in quoted_post_ids:
                 self.quoted_posts.add(i)
         if self.parent:

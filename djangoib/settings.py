@@ -139,9 +139,21 @@ ADMINS = [
     ('admin', 'admin@example.com'),
 ]
 
+ADMIN_INITIAL_PASSWORD = os.getenv('ADMIN_INITIAL_PASSWORD', 'admin')
+
+APP_INFO = os.getenv(
+    'APP_INFO',
+    'DjangoIB is an image-based bulletin board where you can post comments and share images. '
+    'There are boards dedicated to a variety of topics. You do not need to register an account '
+    'before participating in the community. Feel free to click on a board below that interests '
+    'you and jump right in!'
+)
+
+APP_LOGO = os.getenv('APP_LOGO')
+
 APP_NAME = os.getenv('APP_NAME', 'DjangoIB')
 
-ADMIN_INITIAL_PASSWORD = os.getenv('ADMIN_INITIAL_PASSWORD', 'admin')
+COPYRIGHT_TEMPLATE = os.getenv('COPYRIGHT_TEMPLATE', '&copy; {CURRENT_YEAR} {APP_NAME}. All rights reserved.')
 
 CSRF_COOKIE_SECURE = IS_PROD
 

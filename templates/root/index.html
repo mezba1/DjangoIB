@@ -10,17 +10,17 @@
 <div id="root">
     <div class="fluke"></div>
     <div style="margin-bottom: var(--spacing-lg);">
-        <img class="site-logo" src="{% static 'root/png/djangoib_logo.png' %}" alt="DjangoIB Logo" />
+        <img class="site-logo" src="{% if app_logo %}{{ app_logo }}{% else %}{% static 'root/png/djangoib_logo.png' %}{% endif %}" alt="DjangoIB Logo" />
     </div>
-    <div class="card">
-        <div class="card-body">
-            <div class="site-header-container row">
-                <div>
-                    DjangoIB is an image-based bulletin board where you can post comments and share images. There are boards dedicated to a variety of topics. You do not need to register an account before participating in the community. Feel free to click on a board below that interests you and jump right in!
+    {% if app_info %}
+        <div class="card">
+            <div class="card-body">
+                <div class="site-header-container row">
+                    <div>{{ app_info }}</div>
                 </div>
             </div>
         </div>
-    </div>
+    {% endif %}
     <div class="card">
         <div class="card-header">
             <h3 class="mx-0">Boards</h3>
@@ -49,8 +49,6 @@
             Some stats
         </div>
     </div>
-    <div class="site-footer">
-        <div class="text-center"><small>Copyright © 2020 DjangoIB. All rights reserved.</small></div>
-    </div>
+    {% include "root/footer.html" %}
 </div>
 {% endblock %}

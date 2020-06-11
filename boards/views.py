@@ -1,8 +1,8 @@
 import math
+from datetime import datetime
 
 from django.conf import settings
 from django.contrib.postgres.search import SearchVector
-from django.db.models import Q
 from django.http import Http404, HttpRequest
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
@@ -11,11 +11,18 @@ from django.views.decorators.http import require_http_methods
 from djangoib.utils import get_ip_from_request
 from . import forms, models
 
+
+APP_INFO = getattr(settings, 'APP_INFO')
+APP_LOGO = getattr(settings, 'APP_LOGO')
+APP_NAME = getattr(settings, 'APP_NAME')
+CURRENT_YEAR = datetime.now().year
 MAX_THREADS_PER_PAGE = getattr(settings, 'MAX_THREADS_PER_PAGE', 10)
+COPYRIGHT_TEMPLATE = getattr(settings, 'COPYRIGHT_TEMPLATE')
+COPYRIGHT_TEXT = COPYRIGHT_TEMPLATE.format(APP_NAME=APP_NAME, CURRENT_YEAR=CURRENT_YEAR)
 
 
 @require_http_methods(['GET'])
-def index_view(request: HttpRequest):
+def index(request: HttpRequest):
     boards = models.Board.objects.all()
     board_count = models.Board.objects.count()
     bucket_count = 4
@@ -32,16 +39,20 @@ def index_view(request: HttpRequest):
             board_buckets[i] = boards[bucket_start_cursor:bucket_start_cursor+element_count]
             bucket_start_cursor += element_count
     ctx = {
+        'app_info': APP_INFO,
+        'app_logo': APP_LOGO,
         'board_buckets': board_buckets,
+        'copyright_text': COPYRIGHT_TEXT,
     }
     return render(request, 'root/index.html', ctx)
 
 
 @require_http_methods(['GET', 'POST'])
-def slug_view(request: HttpRequest, slug: str, page: int = 1):
+def board_index(request: HttpRequest, slug: str, page: int = 1):
     board = get_object_or_404(models.Board, slug=slug)
     thread_count = board.post_set.filter(parent=None, is_archived=False).count()
     page_count = math.ceil(thread_count / MAX_THREADS_PER_PAGE)
+    user = request.user
 
     if page > page_count and page > 1:
         raise Http404()
@@ -53,8 +64,10 @@ def slug_view(request: HttpRequest, slug: str, page: int = 1):
             new_post = form.save(commit=False)
             new_post.board = board
             new_post.ip_address = get_ip_from_request(request)
+            if user.is_authenticated:
+                new_post.user = user
             new_post.save()
-            new_post_link = reverse('thread', args=(board.slug, new_post.pk,))
+            new_post_link = reverse('dib-thread-index', args=(board.slug, new_post.pk,))
             return redirect('{}#p{}'.format(new_post_link, new_post.pk))
     else:
         form = forms.PostCreationForm()
@@ -73,6 +86,7 @@ def slug_view(request: HttpRequest, slug: str, page: int = 1):
         'post_form': form,
         'threads': threads,
         'thread_count': thread_count,
+        'copyright_text': COPYRIGHT_TEXT,
     }
     for t in threads:
         tinfo = dict()
@@ -94,9 +108,10 @@ def slug_view(request: HttpRequest, slug: str, page: int = 1):
 
 
 @require_http_methods(['GET', 'POST'])
-def thread_view(request: HttpRequest, slug: str, thread_id: int):
+def thread_index(request: HttpRequest, slug: str, thread_id: int):
     board = get_object_or_404(models.Board, slug=slug)
     thread = get_object_or_404(models.Post, pk=thread_id)
+    user = request.user
 
     print(thread.quoted_in_set.all())
 
@@ -105,6 +120,8 @@ def thread_view(request: HttpRequest, slug: str, thread_id: int):
         post_data['board'] = board.pk
         post_data['ip_address'] = get_ip_from_request(request)
         post_data['parent'] = thread.pk
+        if user.is_authenticated:
+            post_data['user'] = user
         request.POST = post_data
         form = forms.ReplyCreationForm(request.POST, request.FILES)
 
@@ -125,15 +142,17 @@ def thread_view(request: HttpRequest, slug: str, thread_id: int):
         'reply_count': len(replies),
         'reply_with_image_count': reply_with_image_count,
         'thread': thread,
+        'copyright_text': COPYRIGHT_TEXT,
     }
     return render(request, 'boards/thread.html', ctx)
 
 
 @require_http_methods(['GET', 'POST'])
-def catalog(request: HttpRequest, slug):
+def catalog_index(request: HttpRequest, slug):
     board = get_object_or_404(models.Board, slug=slug)
     is_archive = request.resolver_match.url_name == 'archive'
     search_query = request.GET.get('q')
+    user = request.user
     if search_query:
         search_query_striped = search_query.strip()
     else:
@@ -146,21 +165,18 @@ def catalog(request: HttpRequest, slug):
             new_post = form.save(commit=False)
             new_post.board = board
             new_post.ip_address = get_ip_from_request(request)
+            if user.is_authenticated:
+                new_post.user = user
             new_post.save()
-            new_post_link = reverse('thread', args=(board.slug, new_post.pk,))
+            new_post_link = reverse('dib-thread-index', args=(board.slug, new_post.pk,))
             return redirect(new_post_link)
     else:
         form = forms.PostCreationForm()
 
     boards = models.Board.objects.all()
     if search_query_striped:
-        threads = board.post_set.annotate(search=SearchVector('body', 'title')).filter(parent=None,
-                                                                                       search=search_query_striped)
-        # threads = board.post_set.filter(
-        #     Q(parent=None)
-        #     & Q(is_archived=is_archive)
-        #     & (Q(body__contains=search_query_striped) | Q(title__contains=search_query_striped))
-        # )
+        threads = board.post_set.annotate(search=SearchVector('body', 'title')).filter(
+            parent=None, search__icontains=search_query_striped)
     else:
         threads = board.post_set.filter(parent=None, is_archived=is_archive)
     thread_count = len(threads)
@@ -179,5 +195,6 @@ def catalog(request: HttpRequest, slug):
         'search_query': search_query,
         'threads': threads,
         'thread_count': thread_count,
+        'copyright_text': COPYRIGHT_TEXT,
     }
     return render(request, 'boards/catalog.html', ctx)
