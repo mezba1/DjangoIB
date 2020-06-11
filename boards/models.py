@@ -24,9 +24,22 @@ def _validate_file_size(value):
 
 
 class Board(models.Model):
-    is_sfw = models.BooleanField(null=False)
-    title = models.CharField(max_length=64, null=False)
-    slug = models.CharField(max_length=4, null=False, unique=True)
+    is_sfw = models.BooleanField(
+        default=False,
+        help_text=_('Indicates whether this board is safe-for-work (sfw) or not.'),
+        null=False,
+    )
+    title = models.CharField(
+        help_text=_('Title of this board.'),
+        max_length=64,
+        null=False,
+    )
+    slug = models.CharField(
+        help_text=_('Identifier of this board (slug). Will be used in urls.'),
+        max_length=4,
+        null=False,
+        unique=True,
+    )
 
     objects = models.Manager()
     created_at = models.DateTimeField(default=timezone.now)
@@ -50,7 +63,7 @@ class Board(models.Model):
 
 class Post(models.Model):
     board = models.ForeignKey(
-        help_text=_('Required. Indicates which board current post belongs to.'),
+        help_text=_('Required. Indicates which board this post belongs to.'),
         null=False,
         on_delete=models.CASCADE,
         to=Board,
@@ -58,8 +71,8 @@ class Post(models.Model):
     body = models.CharField(
         blank=True,
         help_text=_(
-            "Required if, 1. current post is parent (thread) and no title is provided or "
-            "2. current post is not parent (reply) and no title or file is provided. "
+            "Required if, 1. this post is a thread and no title is provided or "
+            "2. this post is a reply and no title or file is provided. "
             "Main text content/body of current post which appears after it's title."
         ),
         max_length=2048,
@@ -67,7 +80,7 @@ class Post(models.Model):
     )
     file = models.FileField(
         blank=True,
-        help_text=_('Required if current post is parent (thread). Maximum allowed size is 20MB.'),
+        help_text=_('Required if this post is a thread. Maximum allowed size is 20MB.'),
         null=True,
         storage=file_storage,
         validators=[_validate_file_size],
@@ -113,17 +126,17 @@ class Post(models.Model):
     )
     is_archived = models.BooleanField(
         default=False,
-        help_text=_('Indicates whether current post is archived or not.'),
+        help_text=_('Indicates whether this post is archived or not.'),
         null=False,
     )
     is_locked = models.BooleanField(
         default=False,
-        help_text=_('Indicates whether current post is locked or not.'),
+        help_text=_('Indicates whether this post is locked or not.'),
         null=False,
     )
     is_sticky = models.BooleanField(
         default=False,
-        help_text=_('Indicates whether current post is sticky or not.'),
+        help_text=_('Indicates whether this post is sticky or not.'),
         null=False,
     )
     name = models.CharField(
@@ -134,7 +147,7 @@ class Post(models.Model):
     )
     parent = models.ForeignKey(
         blank=True,
-        help_text=_('Required. Indicates which parent post (thread) current post (reply) belongs to.'),
+        help_text=_('Required. Indicates which thread this post belongs to.'),
         null=True,
         on_delete=models.CASCADE,
         to='self',
@@ -143,8 +156,8 @@ class Post(models.Model):
     title = models.CharField(
         blank=True,
         help_text=_(
-            "Required if current post is parent (thread) and no body is provided. "
-            "Title of current post. N.B. replies must not have title."
+            "Required if this post is a thread and no body is provided. "
+            "Title of this post. N.B. replies must not have title."
         ),
         max_length=64,
         null=True,
