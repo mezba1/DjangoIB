@@ -1,7 +1,6 @@
 #root {
     margin: 0 auto;
-    min-width: 768px;
-    width: 992px;
+    max-width: 992px;
 }
 
 .boards-list {
