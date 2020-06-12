@@ -66,6 +66,7 @@ TEMPLATES = [
                 'django.template.context_processors.request',
                 'django.contrib.auth.context_processors.auth',
                 'django.contrib.messages.context_processors.messages',
+                'djangoib.context_processors.defauls',
             ],
         },
     },
@@ -156,6 +157,8 @@ APP_NAME = os.getenv('APP_NAME', 'DjangoIB')
 COPYRIGHT_TEMPLATE = os.getenv('COPYRIGHT_TEMPLATE', '&copy; {CURRENT_YEAR} {APP_NAME}. All rights reserved.')
 
 CSRF_COOKIE_SECURE = IS_PROD
+
+GA_TRACKING_ID = os.getenv('GA_TRACKING_ID')
 
 MAX_THREADS_PER_PAGE = 10  # Maximum number of threads to show per page
 

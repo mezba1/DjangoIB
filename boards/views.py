@@ -1,5 +1,4 @@
 import math
-from datetime import datetime
 
 from django.conf import settings
 from django.contrib.postgres.search import SearchVector
@@ -14,11 +13,7 @@ from . import forms, models
 
 APP_INFO = getattr(settings, 'APP_INFO')
 APP_LOGO = getattr(settings, 'APP_LOGO')
-APP_NAME = getattr(settings, 'APP_NAME')
-CURRENT_YEAR = datetime.now().year
 MAX_THREADS_PER_PAGE = getattr(settings, 'MAX_THREADS_PER_PAGE', 10)
-COPYRIGHT_TEMPLATE = getattr(settings, 'COPYRIGHT_TEMPLATE')
-COPYRIGHT_TEXT = COPYRIGHT_TEMPLATE.format(APP_NAME=APP_NAME, CURRENT_YEAR=CURRENT_YEAR)
 
 
 @require_http_methods(['GET'])
@@ -42,7 +37,6 @@ def index(request: HttpRequest):
         'app_info': APP_INFO,
         'app_logo': APP_LOGO,
         'board_buckets': board_buckets,
-        'copyright_text': COPYRIGHT_TEXT,
     }
     return render(request, 'root/index.html', ctx)
 
@@ -86,7 +80,6 @@ def board_index(request: HttpRequest, slug: str, page: int = 1):
         'post_form': form,
         'threads': threads,
         'thread_count': thread_count,
-        'copyright_text': COPYRIGHT_TEXT,
     }
     for t in threads:
         tinfo = dict()
@@ -142,7 +135,6 @@ def thread_index(request: HttpRequest, slug: str, thread_id: int):
         'reply_count': len(replies),
         'reply_with_image_count': reply_with_image_count,
         'thread': thread,
-        'copyright_text': COPYRIGHT_TEXT,
     }
     return render(request, 'boards/thread.html', ctx)
 
@@ -195,6 +187,5 @@ def catalog_index(request: HttpRequest, slug):
         'search_query': search_query,
         'threads': threads,
         'thread_count': thread_count,
-        'copyright_text': COPYRIGHT_TEXT,
     }
     return render(request, 'boards/catalog.html', ctx)

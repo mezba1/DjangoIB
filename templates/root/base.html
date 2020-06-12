@@ -5,10 +5,21 @@
 <head>
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
-    <title>{% if board %}{{ board|stringformat:'s' }}{% else %}DjangoIB{% endif %}</title>
+    <title>{% if board %}{{ board|stringformat:'s' }}{% else %}{{ app_name }}{% endif %}</title>
     <link href="{% static 'root/css/base.css' %}" rel="stylesheet" type="text/css" />
     {% block head_staticfiles %}{% endblock %}
     {% block head_scripts %}{% endblock %}
+
+    {% if ga_tracking_id %}
+        <script async src="https://www.googletagmanager.com/gtag/js?id={{ ga_tracking_id }}"></script>
+        <script>
+          window.dataLayer = window.dataLayer || [];
+          function gtag(){dataLayer.push(arguments);}
+          gtag('js', new Date());
+
+          gtag('config', {{ ga_tracking_id }});
+        </script>
+    {% endif %}
 </head>
 <body>
     <div id="top"></div>
