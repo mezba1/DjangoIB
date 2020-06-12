@@ -275,6 +275,12 @@ class Post(models.Model):
         else:
             if not self.body and not self.file and not self.has_image():
                 raise ValidationError('Provide an image or some content or both.')
+            if self.is_archived:
+                self.is_archived = False
+            if self.is_locked:
+                self.is_locked = False
+            if self.is_sticky:
+                self.is_sticky = False
 
         return super().clean()
 
