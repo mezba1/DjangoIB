@@ -1,6 +1,6 @@
 beautifulsoup4
-Django
 dj-database-url
+Django
 gunicorn
 lxml
 micawber
