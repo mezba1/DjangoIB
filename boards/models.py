@@ -23,64 +23,10 @@ def _validate_file_size(value):
         return value
 
 
-class Board(models.Model):
-    is_sfw = models.BooleanField(
-        default=False,
-        help_text=_('Indicates whether this board is safe-for-work (sfw) or not.'),
-        null=False,
-    )
-    title = models.CharField(
-        help_text=_('Title of this board.'),
-        max_length=64,
-        null=False,
-    )
-    slug = models.CharField(
-        help_text=_('Identifier of this board (slug). Will be used in urls.'),
-        max_length=4,
-        null=False,
-        unique=True,
-    )
-
-    objects = models.Manager()
-    created_at = models.DateTimeField(default=timezone.now)
-    updated_at = models.DateTimeField(default=timezone.now)
-
-    def __str__(self):
-        return '/{}/ - {}'.format(self.slug, self.title)
-
-    def get_absolute_url(self):
-        return reverse('dib-board-index', args=[self.slug])
-
-    def save(self, *args, **kwargs):
-        self.full_clean()
-        if self.pk:
-            self.updated_at = timezone.now()
-        return super().save(*args, **kwargs)
-
-    class Meta:
-        ordering = ['slug']
-
-
-class Post(models.Model):
-    board = models.ForeignKey(
-        help_text=_('Required. Indicates which board this post belongs to.'),
-        null=False,
-        on_delete=models.CASCADE,
-        to=Board,
-    )
-    body = models.CharField(
-        blank=True,
-        help_text=_(
-            "Required if, 1. this post is a thread and no title is provided or "
-            "2. this post is a reply and no title or file is provided. "
-            "Main text content/body of current post which appears after it's title."
-        ),
-        max_length=2048,
-        null=False,
-    )
+class CustomBaseModel(models.Model):
     file = models.FileField(
         blank=True,
-        help_text=_('Required if this post is a thread. Maximum allowed size is 20MB.'),
+        help_text=_('Maximum allowed size is 20MB.'),
         null=True,
         storage=file_storage,
         validators=[_validate_file_size],
@@ -118,6 +64,134 @@ class Post(models.Model):
         blank=True,
         help_text=_('Autopopulated by the system. Indicates the width of the image file.'),
         null=True,
+    )
+
+    class Meta:
+        abstract = True
+
+    def _clear_file_fields(self):
+        self.file_delete_hash = None
+        self.file_height = None
+        self.file_name = None
+        self.file_size = None
+        self.file_url = None
+        self.file_width = None
+
+    def has_image(self):
+        if all([self.file_delete_hash, self.file_height, self.file_name, self.file_size, self.file_url,
+                self.file_width]):
+            return True
+        else:
+            return False
+
+    def get_image_url(self):
+        return self.file_url
+
+    def get_small_thumbnail(self):
+        return self.get_thumbnail('s')
+
+    def get_thumbnail(self, modifier='m'):
+        if self.has_image():
+            a, b = self.get_image_url().rsplit('.', 1)
+            return '{}{}.{}'.format(a, modifier, b)
+        else:
+            return None
+
+    def get_image_download_url(self):
+        if self.has_image():
+            a, _ = self.get_image_url().rsplit('.', 1)
+            _, b = a.rsplit('/', 1)
+            return 'https://imgur.com/download/{}'.format(b)
+        else:
+            return None
+
+    def _process_file_fields(self):
+        if self.has_image():
+            pass
+        else:
+            self._clear_file_fields()
+
+    def process_image(self):
+        if self.file:
+            r = upload_image(self.file.file)
+            if r:
+                succeeded = r.get('success')
+                if succeeded:
+                    data = r.get('data')
+                    self.file_delete_hash = data.get('deletehash')
+                    self.file_height = data.get('height')
+                    self.file_name = self.file.file.name
+                    self.file_size = data.get('size')
+                    self.file_url = data.get('link')
+                    self.file_width = data.get('width')
+            else:
+                self._process_file_fields()
+            self.file = None
+        else:
+            self._process_file_fields()
+
+
+class Board(CustomBaseModel):
+    is_sfw = models.BooleanField(
+        default=False,
+        help_text=_('Indicates whether this board is safe-for-work (sfw) or not.'),
+        null=False,
+    )
+    tagline = models.CharField(
+        blank=True,
+        help_text=_('Tagline of this board.'),
+        max_length=128,
+        null=True,
+    )
+    title = models.CharField(
+        help_text=_('Title of this board.'),
+        max_length=64,
+        null=False,
+    )
+    slug = models.CharField(
+        help_text=_('Identifier of this board (slug). Will be used in urls.'),
+        max_length=4,
+        null=False,
+        unique=True,
+    )
+
+    objects = models.Manager()
+    created_at = models.DateTimeField(default=timezone.now)
+    updated_at = models.DateTimeField(default=timezone.now)
+
+    def __str__(self):
+        return '/{}/ - {}'.format(self.slug, self.title)
+
+    def get_absolute_url(self):
+        return reverse('dib-board-index', args=[self.slug])
+
+    def save(self, *args, **kwargs):
+        self.full_clean()
+        if self.pk:
+            self.updated_at = timezone.now()
+        self.process_image()
+        return super().save(*args, **kwargs)
+
+    class Meta:
+        ordering = ['slug']
+
+
+class Post(CustomBaseModel):
+    board = models.ForeignKey(
+        help_text=_('Required. Indicates which board this post belongs to.'),
+        null=False,
+        on_delete=models.CASCADE,
+        to=Board,
+    )
+    body = models.CharField(
+        blank=True,
+        help_text=_(
+            "Required if, 1. this post is a thread and no title is provided or "
+            "2. this post is a reply and no title or file is provided. "
+            "Main text content/body of current post which appears after it's title."
+        ),
+        max_length=2048,
+        null=False,
     )
     ip_address = models.GenericIPAddressField(
         default='0.0.0.0',
@@ -173,86 +247,14 @@ class Post(models.Model):
     created_at = models.DateTimeField(default=timezone.now)
     updated_at = models.DateTimeField(default=timezone.now)
 
-    image_field = 'file'
-
     def __str__(self):
         if self.parent:
             return '#{}/{} (/{}/ - {})'.format(self.parent.pk, self.pk, self.board.slug, self.board.title)
         else:
             return '#{} (/{}/ - {})'.format(self.pk, self.board.slug, self.board.title)
 
-    def _clear_file_fields(self):
-        field_name = self.image_field
-        setattr(self, '{}_delete_hash'.format(field_name), None)
-        setattr(self, '{}_height'.format(field_name), None)
-        setattr(self, '{}_name'.format(field_name), None)
-        setattr(self, '{}_size'.format(field_name), None)
-        setattr(self, '{}_url'.format(field_name), None)
-        setattr(self, '{}_width'.format(field_name), None)
-
-    def has_image(self):
-        field_name = self.image_field
-        if all([getattr(self, '{}_delete_hash'.format(field_name), None),
-                getattr(self, '{}_height'.format(field_name), None),
-                getattr(self, '{}_name'.format(field_name), None),
-                getattr(self, '{}_size'.format(field_name), None),
-                getattr(self, '{}_url'.format(field_name), None),
-                getattr(self, '{}_width'.format(field_name), None)]):
-            return True
-        else:
-            return False
-
     def get_absolute_url(self):
         return reverse('dib-thread-index', args=[self.board.slug, self.pk])
-
-    def get_image_url(self):
-        field_name = self.image_field
-        return getattr(self, '{}_url'.format(field_name))
-
-    def get_small_thumbnail(self):
-        return self.get_thumbnail('s')
-
-    def get_thumbnail(self, modifier='m'):
-        if self.has_image():
-            a, b = self.get_image_url().rsplit('.', 1)
-            return '{}{}.{}'.format(a, modifier, b)
-        else:
-            return None
-
-    def get_image_download_url(self):
-        if self.has_image():
-            a, _ = self.get_image_url().rsplit('.', 1)
-            _, b = a.rsplit('/', 1)
-            return 'https://imgur.com/download/{}'.format(b)
-        else:
-            return None
-
-    def _process_file_fields(self):
-        if self.has_image():
-            pass
-        else:
-            self._clear_file_fields()
-
-    def process_image(self):
-        field_name = self.image_field
-        img = getattr(self, field_name, None)
-        if img:
-            r = upload_image(img.file)
-            if r:
-                succeeded = r.get('success')
-                if succeeded:
-                    data = r.get('data')
-                    setattr(self, '{}_delete_hash'.format(field_name), data.get('deletehash'))
-                    setattr(self, '{}_height'.format(field_name), data.get('height'))
-                    setattr(self, '{}_name'.format(field_name), img.file.name)
-                    setattr(self, '{}_size'.format(field_name), data.get('size'))
-                    setattr(self, '{}_url'.format(field_name), data.get('link'))
-                    setattr(self, '{}_width'.format(field_name), data.get('width'))
-            else:
-                self._process_file_fields()
-            self.file = None
-        else:
-            self._process_file_fields()
 
     def process_body(self):
         if self.body and self.parent:

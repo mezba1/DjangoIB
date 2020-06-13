@@ -230,6 +230,11 @@ template {
   display: none;
 }
 
+.board-banner {
+    border: 1px solid #000000;
+    max-width: 300px;
+}
+
 .card {
   background-color: #282a2e;
   border-radius: var(--border-radius);

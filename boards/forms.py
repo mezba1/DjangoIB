@@ -30,7 +30,8 @@ class ReplyCreationForm(forms.ModelForm):
 class AdminBoardForm(forms.ModelForm):
     class Meta:
         model = models.Board
-        exclude = ['created_at', 'updated_at']
+        exclude = ['created_at', 'file_delete_hash', 'file_height', 'file_name', 'file_size', 'file_url',
+                   'file_width', 'updated_at']
 
 
 class AdminPostForm(forms.ModelForm):

@@ -23,7 +23,7 @@ make_sticky.short_description = "Mark selected threads as sticky"
 
 class BoardAdmin(admin.ModelAdmin):
     form = forms.AdminBoardForm
-    list_display = ['slug', 'title', 'is_sfw', 'created_at', 'updated_at']
+    list_display = ['slug', 'title', 'is_sfw', 'file_url', 'created_at', 'updated_at']
 
 
 class PostAdmin(admin.ModelAdmin):
