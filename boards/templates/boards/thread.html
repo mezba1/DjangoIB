@@ -15,7 +15,7 @@
     {% include 'boards/board_info.html' %}
 
     <div class="post-form">
-        <h4 class="text-center">— Post a reply —</h4>
+        <h4 class="text-center">▼ Post a reply ▼</h4>
         <form action="" enctype="multipart/form-data" method="post">
             {% csrf_token %}
             <table>
@@ -77,7 +77,7 @@
                     <img class="post-image" src="{{ thread.get_thumbnail }}" alt="Post image" />
                 </a>
             </div>
-            <div>
+            <div class="op-reply-header">
                 <span class="post-id">#{{ thread.pk }}</span>
                 {% if thread.title %}<span><b>{{ thread.title }}</b></span>&nbsp;{% endif %}
                 {% if thread.name %}<span class="poster-name">{{ thread.name }}</span>{% else %}<span class="poster-name anon">Anonymous</span>{% endif %}&nbsp;
@@ -108,5 +108,7 @@
 {% endblock %}
 
 {% block body_scripts %}
+    <script src="{% static 'root/js/popper.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'root/js/tippy-bundle.umd.min.js' %}" type="text/javascript"></script>
     <script src="{% static 'boards/js/b.js' %}" type="text/javascript"></script>
 {% endblock %}

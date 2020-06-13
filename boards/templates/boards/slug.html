@@ -23,7 +23,7 @@
         {% if thread_count > 0 %}
             {% for t in threads %}
                 <div class="clearfix thread-container">
-                    <div class="post-container op">
+                    <div class="post-container op" id="p{{ t.pk }}">
                         <div class="image-info">File: <a href="{{ t.get_image_download_url }}" target="_blank">{{ t.file_name }}</a> ({{ t.file_size|filesizeformat }}, {{ t.file_width }}x{{ t.file_height }}) </div>
                         <div class="post-image-container">
                             <a class="post-image-link" href="{{ t.get_image_download_url }}" data-full-src="{{ t.get_image_url }}" data-thumb-src="{{ t.get_thumbnail }}">
@@ -74,5 +74,7 @@
 {% endblock %}
 
 {% block body_scripts %}
+    <script src="{% static 'root/js/popper.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'root/js/tippy-bundle.umd.min.js' %}" type="text/javascript"></script>
     <script src="{% static 'boards/js/b.js' %}" type="text/javascript"></script>
 {% endblock %}

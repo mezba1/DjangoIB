@@ -243,7 +243,8 @@ template {
 }
 
 .card-header,
-.reply-header {
+.reply-header,
+.tippy-content .op-reply-header {
   background-color: #232529;
   border-top-left-radius: var(--border-radius);
   border-top-right-radius: var(--border-radius);
@@ -276,6 +277,10 @@ template {
   content: "";
   clear: both;
   display: table;
+}
+
+.cloned-post-container {
+    position: fixed;
 }
 
 .errors-list {
@@ -335,6 +340,11 @@ template {
   white-space: pre-line !important;
 }
 
+.post-container.highlight .pseudo-post-container,
+.post-container:target .pseudo-post-container {
+    background-color: #3caea34a !important;
+}
+
 .pt-0 {
   padding-top: 0 !important;
 }
@@ -387,7 +397,8 @@ template {
   margin-right: 2px;
 }
 
-.thread-container .post-container .post-body {
+.thread-container .post-container .post-body,
+.tippy-content .post-body {
   padding: 5px 20px;
   white-space: pre-line;
 }
@@ -432,4 +443,59 @@ template {
 
 .text-disabled {
   color: var(--light-3) !important;
+}
+
+.tippy-box[data-theme~=translucent] {
+	background-color: #282a2e;
+    border-radius: var(--border-radius);
+    box-shadow: 0 3px 6px rgba(0,0,0,0.16), 0 3px 6px rgba(0,0,0,0.23);
+    color: inherit;
+    font-size: var(--font-sm);
+    line-height: initial;
+}
+
+.tippy-box[data-theme~=translucent]>.tippy-arrow {
+	width: 14px;
+	height: 14px;
+}
+
+.tippy-box[data-theme~=translucent][data-placement^=top]>.tippy-arrow:before {
+	border-width: 7px 7px 0;
+	border-top-color: rgba(0, 0, 0, .7);
+}
+
+.tippy-box[data-theme~=translucent][data-placement^=bottom]>.tippy-arrow:before {
+	border-width: 0 7px 7px;
+	border-bottom-color: rgba(0, 0, 0, .7);
+}
+
+.tippy-box[data-theme~=translucent][data-placement^=left]>.tippy-arrow:before {
+	border-width: 7px 0 7px 7px;
+	border-left-color: rgba(0, 0, 0, .7);
+}
+
+.tippy-box[data-theme~=translucent][data-placement^=right]>.tippy-arrow:before {
+	border-width: 7px 7px 7px 0;
+	border-right-color: rgba(0, 0, 0, .7);
+}
+
+.tippy-box[data-theme~=translucent]>.tippy-backdrop {
+	background-color: rgba(0, 0, 0, .7);
+}
+
+.tippy-box[data-theme~=translucent]>.tippy-svg-arrow {
+	fill: rgba(0, 0, 0, .7)
+}
+
+.tippy-content {
+    display: table;
+    padding: 2px;
+}
+
+.tippy-content>.image-info {
+    padding: var(--spacing) var(--spacing-md);
+}
+
+.tippy-content .post-image {
+    padding: var(--spacing) var(--spacing-md);
 }
