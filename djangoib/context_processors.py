@@ -10,7 +10,7 @@ COPYRIGHT_TEMPLATE = getattr(settings, 'COPYRIGHT_TEMPLATE')
 COPYRIGHT_TEXT = COPYRIGHT_TEMPLATE.format(APP_NAME=APP_NAME, CURRENT_YEAR=CURRENT_YEAR)
 
 
-def defauls(_):
+def defaults(_):
     ctx = {
         'app_name': APP_NAME,
         'copyright_text': COPYRIGHT_TEXT,
