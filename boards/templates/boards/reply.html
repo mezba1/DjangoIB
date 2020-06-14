@@ -1,6 +1,6 @@
 {% load humanize %}
 
-<div class="clearfix post-container" id="p{{ p.pk }}">
+<div class="clearfix post-container" id="p{{ p.pk }}"{% if container_styles %} style="{{ container_styles }}"{% endif %}>
     <div class="post-arrows">&gt;&gt;</div>
     <div class="clearfix pseudo-post-container">
         <div class="reply-header">
@@ -10,7 +10,7 @@
             <span title="{{ p.created_at|naturaltime }}">{{ p.created_at }}</span>
             {% if p.quoted_in_set.exists %}
             (<span class="text-disabled">Quoted in:</span>
-            {% for pq in p.quoted_in_set.all %}<a class="quoted-post-to-link" href="#p{{ pq.pk }}">&gt;&gt;{{ pq.pk }}</a>{% endfor %})
+            {% for pq in p.quoted_in_set.all|dictsort:'id' %}<a class="quoted-post-to-link" href="#p{{ pq.pk }}">&gt;&gt;{{ pq.pk }}</a>{% endfor %})
             {% endif %}
         </div>
         {% if p.has_image %}

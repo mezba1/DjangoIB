@@ -38,7 +38,7 @@
                             <span>[ <a href="{{ t.get_absolute_url }}">Reply</a> ]</span>
                             {% if t.quoted_in_set.exists %}
                             (<span class="text-disabled">Quoted in:</span>
-                            {% for pq in t.quoted_in_set.all %}<a class="quoted-post-to-link" href="#p{{ pq.pk }}">&gt;&gt;{{ pq.pk }}</a>{% endfor %})
+                            {% for pq in t.quoted_in_set.all|dictsort:'id' %}<a class="quoted-post-to-link" href="#p{{ pq.pk }}">&gt;&gt;{{ pq.pk }}</a>{% endfor %})
                             {% endif %}
                         </div>
                         <div class="post-body">{{ t.body | safe }}</div>

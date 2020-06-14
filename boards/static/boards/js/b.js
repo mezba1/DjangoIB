@@ -34,7 +34,18 @@ function initTooltips() {
       },
       onShow(instance) {
         if (instance.props.content === null) {
+          instance.setContent('<b>Loading...</b>');
           console.log('need to load content')
+          const href = instance.reference.getAttribute('href');
+          const targetPostId = href.split('#p')[1];
+          $.ajax({
+            url: `/partial/post/${targetPostId}/`,
+            method: 'GET',
+          }).done(function(data) {
+            $('body').append(data);
+            const targetEl = document.querySelector(`.post-container${href} .pseudo-post-container`);
+            instance.setContent(targetEl ? targetEl.innerHTML : '<b>:(</b>');
+          });
         }
       },
       allowHTML: true,
@@ -57,7 +68,7 @@ function initTooltips() {
     const href = $(this).attr('href');
     const targetEl = $(href);
     if (targetEl) {
-      if (inViewport(targetEl) > 0) {
+      if (inViewport(targetEl) > 24) {
         hoverTargetEl = targetEl;
         targetEl.addClass('highlight');
       } else {
@@ -76,6 +87,18 @@ function initTooltips() {
 }
 
 $(document).ready(function() {
+  $('.link-disabled').on('click', function (e) {
+    e.preventDefault();
+  });
+  $('.scroll-to-bottom, .scroll-to-top').on('click', function (e) {
+    e.preventDefault();
+    let hash = this.hash;
+    $('html, body').animate({
+      scrollTop: $(hash).offset().top
+    }, 800, function () {
+      window.location.hash = hash;
+    });
+  });
   $('.post-image-link').on('click', function (e) {
     e.preventDefault();
     const imgEl = $(this).children(':first');

@@ -496,6 +496,10 @@ template {
     padding: var(--spacing) var(--spacing-md);
 }
 
+.tippy-content .expandable-info {
+    display: none !important;
+}
+
 .tippy-content .post-image {
     padding: var(--spacing) var(--spacing-md);
 }

@@ -2,7 +2,7 @@
     {% if board.has_image %}
         <img src="{{ board.get_image_url }}" class="board-banner" alt="board-banner" />
     {% endif %}
-    <h2>{{ board|stringformat:'s' }}</h2>
+    <h1 class="board-title">{{ board|stringformat:'s' }}</h1>
     {% if board.tagline %}
         <small>{{ board.tagline }}</small>
     {% endif %}

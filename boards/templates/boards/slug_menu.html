@@ -22,9 +22,9 @@
             <li>[ <a href="{{ board.get_absolute_url }}archive/">Archive</a> ]</li>
         {% endif %}
         {% if bottom %}
-            <li>[ <a href="#top">Top</a> ]</li>
+            <li>[ <a class="scroll-to-top" href="#top">Top</a> ]</li>
         {% else %}
-            <li>[ <a href="#bottom">Bottom</a> ]</li>
+            <li>[ <a class="scroll-to-bottom" href="#bottom">Bottom</a> ]</li>
         {% endif %}
         {% if search %}
             <li>—</li>

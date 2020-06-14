@@ -84,7 +84,7 @@
                 <span title="{{ thread.created_at|naturaltime }}">{{ thread.created_at }}</span>
                 {% if thread.quoted_in_set.exists %}
                 (<span class="text-disabled">Quoted in:</span>
-                {% for pq in thread.quoted_in_set.all %}<a class="quoted-post-to-link" href="#p{{ pq.pk }}">&gt;&gt;{{ pq.pk }}</a>{% endfor %})
+                {% for pq in thread.quoted_in_set.all|dictsort:'id' %}<a class="quoted-post-to-link" href="#p{{ pq.pk }}">&gt;&gt;{{ pq.pk }}</a>{% endfor %})
                 {% endif %}
             </div>
             <div class="post-body">{{ thread.body | safe }}</div>

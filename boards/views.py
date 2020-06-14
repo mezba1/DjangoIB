@@ -106,8 +106,6 @@ def thread_index(request: HttpRequest, slug: str, thread_id: int):
     thread = get_object_or_404(models.Post, pk=thread_id)
     user = request.user
 
-    print(thread.quoted_in_set.all())
-
     if request.method == 'POST':
         post_data = request.POST.copy()
         post_data['board'] = board.pk
@@ -189,3 +187,13 @@ def catalog_index(request: HttpRequest, slug):
         'thread_count': thread_count,
     }
     return render(request, 'boards/catalog.html', ctx)
+
+
+@require_http_methods(['GET'])
+def partial_post(request: HttpRequest, post_id: int):
+    post = get_object_or_404(models.Post, pk=post_id)
+    ctx = {
+        'container_styles': 'display: none;',
+        'p': post,
+    }
+    return render(request, 'boards/reply.html', ctx)

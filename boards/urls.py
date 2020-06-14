@@ -9,5 +9,6 @@ urlpatterns = [
     path('<slug:slug>/catalog/', views.catalog_index, name='dib-catalog-index'),
     path('<slug:slug>/<int:page>/', views.board_index, name='dib-board-index-page'),
     path('<slug:slug>/thread/<int:thread_id>/', views.thread_index, name='dib-thread-index'),
+    path('partial/post/<int:post_id>/', views.partial_post, name='dib-partial-post'),
     path('', views.index, name='dib-index'),
 ]
