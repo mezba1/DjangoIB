@@ -1,9 +1,0 @@
-beautifulsoup4
-dj-database-url
-Django
-gunicorn
-lxml
-micawber
-psycopg2
-requests
-whitenoise

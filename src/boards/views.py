@@ -38,7 +38,7 @@ def index(request: HttpRequest):
         'app_logo': APP_LOGO,
         'board_buckets': board_buckets,
     }
-    return render(request, 'root/index.html', ctx)
+    return render(request, 'index.html', ctx)
 
 
 @require_http_methods(['GET', 'POST'])
@@ -97,7 +97,7 @@ def board_index(request: HttpRequest, slug: str, page: int = 1):
         else:
             tinfo['hidden_reply_with_image_count'] = 0
         setattr(t, 'ctx', tinfo)
-    return render(request, 'boards/slug.html', ctx)
+    return render(request, 'boards/board_index.html', ctx)
 
 
 @require_http_methods(['GET', 'POST'])
