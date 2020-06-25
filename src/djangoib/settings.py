@@ -17,7 +17,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 SECRET_KEY = os.getenv('SECRET_KEY', 'bhzoe9iftd4wzv+dwfgsv-(gss4-v07j@okd0o5i=$eba(#)kg')
 
-DEBUG = True  # not IS_PROD
+DEBUG = not IS_PROD
 
 if IS_PROD:
     ALLOWED_HOSTS = os.getenv('ALLOWED_HOSTS').split(',')
