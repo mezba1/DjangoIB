@@ -140,3 +140,4 @@ cython_debug/
 # Misc.
 .idea/
 .vscode/
+node_modules/

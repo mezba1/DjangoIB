@@ -1,12 +1,7 @@
-{% extends 'root/base.html' %}
+{% extends 'base.html' %}
 
 {% load humanize %}
 {% load static %}
-
-{% block head_staticfiles %}
-    <link href="{% static 'boards/css/slug.css' %}" rel="stylesheet" />
-    <link href="{% static 'boards/css/thread.css' %}" rel="stylesheet" />
-{% endblock %}
 
 {% block content %}
 <div id="root">
@@ -103,12 +98,6 @@
     <div class="fluke"></div>
     {% include 'boards/board_links.html' %}
 
-    {% include "root/footer.html" %}
+    {% include "footer.html" %}
 </div>
-{% endblock %}
-
-{% block body_scripts %}
-    <script src="{% static 'root/js/popper.min.js' %}" type="text/javascript"></script>
-    <script src="{% static 'root/js/tippy-bundle.umd.min.js' %}" type="text/javascript"></script>
-    <script src="{% static 'boards/js/b.js' %}" type="text/javascript"></script>
 {% endblock %}

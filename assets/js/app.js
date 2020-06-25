@@ -1,3 +1,8 @@
+'use strict';
+
+const $ = require('jquery');
+const tippy = require('tippy.js').default;
+
 function inViewport($el) {
     try {
       let elH = $el.outerHeight(),
@@ -115,3 +120,4 @@ $(document).ready(function() {
   });
   initTooltips();
 });
+

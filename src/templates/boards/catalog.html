@@ -1,11 +1,7 @@
-{% extends 'root/base.html' %}
+{% extends 'base.html' %}
 
 {% load humanize %}
 {% load static %}
-
-{% block head_staticfiles %}
-    <link href="{% static 'boards/css/slug.css' %}" rel="stylesheet" />
-{% endblock %}
 
 {% block content %}
 <div id="root">
@@ -48,6 +44,6 @@
     <div class="fluke"></div>
     {% include 'boards/board_links.html' %}
 
-    {% include "root/footer.html" %}
+    {% include "footer.html" %}
 </div>
 {% endblock %}

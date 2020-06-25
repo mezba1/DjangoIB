@@ -6,7 +6,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
     <title>{% if board %}{{ board|stringformat:'s' }}{% else %}{{ app_name }}{% endif %}</title>
-    <link href="{% static 'root/css/base.css' %}" rel="stylesheet" type="text/css" />
+    <link href="{% static 'css/app.min.css' %}" rel="stylesheet" type="text/css" />
     {% block head_staticfiles %}{% endblock %}
     {% block head_scripts %}{% endblock %}
 
@@ -28,8 +28,7 @@
     <div id="top"></div>
     {% block content %}{% endblock %}
 
-    <script src="{% static 'root/js/defaults.js' %}" type="text/javascript"></script>
-    <script src="{% static 'root/js/jquery.min.js' %}" type="text/javascript"></script>
+    <script src="{% static 'js/app.min.js' %}" type="text/javascript"></script>
     {% block body_scripts %}{% endblock %}
     <div id="bottom"></div>
 </body>

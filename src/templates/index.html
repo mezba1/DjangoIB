@@ -2,15 +2,11 @@
 
 {% load static %}
 
-{% block head_staticfiles %}
-    <link href="{% static 'root/css/index.css' %}" rel="stylesheet" />
-{% endblock %}
-
 {% block content %}
-<div id="root">
+<div id="root" class="index-root">
     <div class="fluke"></div>
     <div style="margin-bottom: var(--spacing-lg);">
-        <img class="site-logo" src="{% if app_logo %}{{ app_logo }}{% else %}{% static 'root/png/djangoib_logo.png' %}{% endif %}" alt="DjangoIB Logo" />
+        <img class="site-logo" src="{% if app_logo %}{{ app_logo }}{% else %}{% static 'images/djangoib_logo.png' %}{% endif %}" alt="DjangoIB Logo" />
     </div>
     {% if app_info %}
         <div class="card">
