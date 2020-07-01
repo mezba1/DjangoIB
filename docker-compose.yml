@@ -1,36 +1,39 @@
-  version: '3'
+version: '3'
 
-  services:
-    db:
-      image: postgres:12-alpine
-      environment:
-        - POSTGRES_DB=djangoib
-        - POSTGRES_USER=postgres
-        - POSTGRES_PASSWORD=postgres
-    web:
-      image: python:3.8
-      working_dir: /app/src
-      environment:
-        - IMGUR_CLIENT_ID=${IMGUR_CLIENT_ID}
-        - PY_ENV=development
-        - PYTHONUNBUFFERED=1
-      command: >
-        bash -c "pip install -r ../requirements.txt
-        && python manage.py makemigrations
-        && python manage.py migrate
-        && python manage.py initadmin
-        && python manage.py runserver 0.0.0.0:8000"
-      volumes:
-        - .:/app
-      ports:
-        - "8000:8000"
-      depends_on:
-        - db
-    gulp:
-      image: node:12.16.3
-      working_dir: /app
-      command: >
-        bash -c "yarn
-        && yarn gulp"
-      volumes:
-        - .:/app
+services:
+  db:
+    image: postgres:12-alpine
+    environment:
+      - POSTGRES_DB=djangoib
+      - POSTGRES_USER=postgres
+      - POSTGRES_PASSWORD=postgres
+  web:
+    image: python:3.8
+    working_dir: /app/src
+    environment:
+      - IMGUR_CLIENT_ID=${IMGUR_CLIENT_ID}
+      - PY_ENV=development
+      - PYTHONUNBUFFERED=1
+    command: >
+      bash -c "pip install -r ../requirements.txt
+      && python manage.py makemigrations
+      && python manage.py migrate
+      && python manage.py initadmin
+      && python manage.py runserver 0.0.0.0:8000"
+    volumes:
+      - .:/app
+    ports:
+      - "8000:8000"
+    depends_on:
+      - db
+      - gulp
+  gulp:
+    image: node:12.16.3
+    working_dir: /app
+    command: >
+      bash -c "yarn
+      && yarn build
+      && yarn watch"
+    user: ${CURRENT_UID}
+    volumes:
+      - .:/app
