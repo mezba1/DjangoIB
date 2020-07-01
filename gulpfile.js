@@ -1,6 +1,6 @@
 'use strict';
 
-const { src, dest, watch } = require('gulp');
+const { src, dest, watch, parallel } = require('gulp');
 const browserify = require('browserify');
 const uglify = require('gulp-uglify');
 const rename = require('gulp-rename');
@@ -12,7 +12,7 @@ const buffer = require('vinyl-buffer');
 sass.compiler = require('node-sass');
 
 const paths = {
-  js: ['./assets/js/app.js'],
+  js: ['assets/js/app.js'],
   scss: ['assets/scss/app.scss'],
 };
 
@@ -38,7 +38,11 @@ function scss() {
     .pipe(dest('src/static/css'));
 }
 
-exports.default = () => {
+exports.default = parallel(js, scss);
+
+exports.watch = () => {
   watch(paths.scss, scss);
   watch(paths.js, js);
-}
+};
+
+exports.build = parallel(js, scss);

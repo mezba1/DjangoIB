@@ -26,11 +26,14 @@ services:
       - "8000:8000"
     depends_on:
       - db
+      - gulp
   gulp:
     image: node:12.16.3
     working_dir: /app
     command: >
       bash -c "yarn
-      && yarn gulp"
+      && yarn build
+      && yarn watch"
+    user: ${CURRENT_UID}
     volumes:
       - .:/app
