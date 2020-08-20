@@ -158,8 +158,6 @@ COPYRIGHT_TEMPLATE = os.getenv('COPYRIGHT_TEMPLATE', '&copy; {CURRENT_YEAR} {APP
 
 CSRF_COOKIE_SECURE = IS_PROD
 
-GA_TRACKING_ID = os.getenv('GA_TRACKING_ID')
-
 MAX_THREADS_PER_PAGE = 10  # Maximum number of threads to show per page
 
 MESSAGE_STORAGE = 'django.contrib.messages.storage.cookie.CookieStorage'
