@@ -484,6 +484,12 @@ textarea {
     width: 320px;
 }
 
+.stats {
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
+}
+
 .text-center {
   text-align: center !important;
 }

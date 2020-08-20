@@ -2,6 +2,7 @@ import math
 
 from django.conf import settings
 from django.contrib.postgres.search import SearchVector
+from django.db.models import Sum
 from django.http import Http404, HttpRequest
 from django.shortcuts import render, get_object_or_404, redirect
 from django.urls import reverse
@@ -33,10 +34,16 @@ def index(request: HttpRequest):
                 element_count += 1
             board_buckets[i] = boards[bucket_start_cursor:bucket_start_cursor+element_count]
             bucket_start_cursor += element_count
+    # statistics
+    total_content_size = models.Post.objects.aggregate(Sum('file_size'))['file_size__sum']
+    total_post_count = models.Post.objects.count()
     ctx = {
         'app_info': APP_INFO,
         'app_logo': APP_LOGO,
         'board_buckets': board_buckets,
+        'total_contents': total_content_size,
+        'total_boards': board_count,
+        'total_posts': total_post_count
     }
     return render(request, 'index.html', ctx)
 

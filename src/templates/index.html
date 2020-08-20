@@ -1,5 +1,6 @@
 {% extends 'base.html' %}
 
+{% load humanize %}
 {% load static %}
 
 {% block content %}
@@ -41,8 +42,10 @@
         <div class="card-header">
             <h3 class="mx-0">Statistics</h3>
         </div>
-        <div class="card-body">
-            Some stats
+        <div class="card-body stats">
+            <div><b>Total boards</b>: {{ total_boards|intcomma }}</div>
+            <div><b>Total posts</b>: {{ total_posts|intcomma }}</div>
+            <div><b>Total contents</b>: {{ total_contents|filesizeformat }}</div>
         </div>
     </div>
     {% include "footer.html" %}
