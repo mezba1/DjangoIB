@@ -11,6 +11,7 @@ lxml==4.5.1
 micawber==0.5.1
 pip-tools==5.1.2
 psycopg2==2.8.5
+python-dotenv==0.14.0
 pytz==2020.1
 requests==2.23.0
 six==1.15.0

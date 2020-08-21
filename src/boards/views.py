@@ -11,8 +11,6 @@ from django.views.decorators.http import require_http_methods
 from djangoib.utils import get_ip_from_request
 from . import forms, models
 
-
-APP_INFO = getattr(settings, 'APP_INFO')
 APP_LOGO = getattr(settings, 'APP_LOGO')
 MAX_THREADS_PER_PAGE = getattr(settings, 'MAX_THREADS_PER_PAGE', 10)
 
@@ -38,7 +36,6 @@ def index(request: HttpRequest):
     total_content_size = models.Post.objects.aggregate(Sum('file_size'))['file_size__sum']
     total_post_count = models.Post.objects.count()
     ctx = {
-        'app_info': APP_INFO,
         'app_logo': APP_LOGO,
         'board_buckets': board_buckets,
         'total_contents': total_content_size,
