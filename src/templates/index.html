@@ -9,15 +9,18 @@
     <div style="margin-bottom: var(--spacing-lg);">
         <img class="site-logo" src="{% if app_logo %}{{ app_logo }}{% else %}{% static 'images/djangoib_logo.png' %}{% endif %}" alt="DjangoIB Logo" />
     </div>
-    {% if app_info %}
-        <div class="card">
-            <div class="card-body">
-                <div class="site-header-container row">
-                    <div>{{ app_info }}</div>
+    <div class="card">
+        <div class="card-body">
+            <div class="site-header-container row">
+                <div>
+                    {{ app_name }} is an image-based bulletin board where you can post comments and share images.
+                    There are boards dedicated to a variety of topics. You do not need to register an account
+                    before participating in the community. Feel free to click on a board below that interests you
+                    and jump right in!
                 </div>
             </div>
         </div>
-    {% endif %}
+    </div>
     <div class="card">
         <div class="card-header">
             <h3 class="mx-0">Boards</h3>

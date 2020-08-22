@@ -2,6 +2,10 @@ import os
 
 import dj_database_url
 
+from dotenv import load_dotenv
+
+load_dotenv()
+
 # Environment
 
 IS_PROD = os.getenv('PY_ENV', 'development') == 'production'
@@ -15,7 +19,7 @@ BASE_DIR = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Quick-start development settings - unsuitable for production
 # See https://docs.djangoproject.com/en/3.0/howto/deployment/checklist/
 
-SECRET_KEY = os.getenv('SECRET_KEY', 'bhzoe9iftd4wzv+dwfgsv-(gss4-v07j@okd0o5i=$eba(#)kg')
+SECRET_KEY = os.getenv('SECRET_KEY', 'djangoib-secret')
 
 DEBUG = not IS_PROD
 
@@ -78,7 +82,7 @@ WSGI_APPLICATION = 'djangoib.wsgi.application'
 # Database
 
 DATABASES = {
-    'default': dj_database_url.config(default='postgres://postgres:postgres@db/djangoib')
+    'default': dj_database_url.config(default='sqlite:///db.sqlite3')
 }
 
 
@@ -129,11 +133,6 @@ STATICFILES_DIRS = [
 STATICFILES_STORAGE = 'whitenoise.storage.CompressedManifestStaticFilesStorage'
 
 
-# Imgur settings
-
-IMGUR_CLIENT_ID = os.getenv('IMGUR_CLIENT_ID')
-
-
 # Misc.
 
 ADMINS = [
@@ -142,21 +141,13 @@ ADMINS = [
 
 ADMIN_INITIAL_PASSWORD = os.getenv('ADMIN_INITIAL_PASSWORD', 'admin')
 
-APP_INFO = os.getenv(
-    'APP_INFO',
-    'DjangoIB is an image-based bulletin board where you can post comments and share images. '
-    'There are boards dedicated to a variety of topics. You do not need to register an account '
-    'before participating in the community. Feel free to click on a board below that interests '
-    'you and jump right in!'
-)
-
 APP_LOGO = os.getenv('APP_LOGO')
 
 APP_NAME = os.getenv('APP_NAME', 'DjangoIB')
 
-COPYRIGHT_TEMPLATE = os.getenv('COPYRIGHT_TEMPLATE', '&copy; {CURRENT_YEAR} {APP_NAME}. All rights reserved.')
-
 CSRF_COOKIE_SECURE = IS_PROD
+
+IMGUR_CLIENT_ID = os.getenv('IMGUR_CLIENT_ID')
 
 MAX_THREADS_PER_PAGE = 10  # Maximum number of threads to show per page
 
