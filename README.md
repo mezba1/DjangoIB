@@ -32,9 +32,13 @@ yarn build
 
 ### Configuration
 
-Create ```.env``` file:
+Create _.env_ file:
 
-```
+```js
+touch .env
+
+// or
+
 cp .env.sample .env
 ```
 
@@ -51,7 +55,7 @@ Following configuration variables can be set with ```.env```:
 | ```PY_ENV``` | Specifies the environment in which DjangoIB is running such as ```development```, ```staging``` and ```production```. | ```development``` |
 | ```SECRET_KEY``` | Secret key ([more](https://docs.djangoproject.com/en/3.0/ref/settings/#std:setting-SECRET_KEY)). | ```djangoib-secret``` |
 
-Initialize database:
+Initialize:
 
 ```
 python src/manage.py migrate
@@ -67,7 +71,10 @@ python src/manage.py runserver
 Open [http://localhost:8000](http://localhost:8000/) in your browser to see the board.
 Navigate to [http://localhost:8000/admin](http://localhost:8000/admin/) to access the admin panel.
 
-
 ## Demo
 
 Want to see DjangoIB in action? [Click me](https://topiary.herokuapp.com/).
+
+Alternatively, you can deploy your own copy of DjangoIB on Heroku using this button:
+
+[![Deploy](https://www.herokucdn.com/deploy/button.svg)](https://heroku.com/deploy)
