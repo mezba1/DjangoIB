@@ -1,0 +1,33 @@
+{
+  "name": "DjangoIB",
+  "description": "Image-based bulletin board",
+  "repository": "https://github.com/mezba1/DjangoIB",
+  "success_url": "/",
+  "env": {
+    "ADMIN_INITIAL_PASSWORD": {
+      "generator": "secret"
+    },
+    "ALLOWED_HOSTS": "*",
+    "IMGUR_CLIENT_ID": "some-client-id",
+    "PY_ENV": "production",
+    "SECRET_KEY": {
+      "generator": "secret"
+    }
+  },
+  "addons": [
+    {
+      "plan": "heroku-postgresql",
+      "options": {
+        "version": "12"
+      }
+    }
+  ],
+  "buildpacks": [
+    {
+      "url": "heroku/nodejs"
+    },
+    {
+      "url": "heroku/python"
+    }
+  ]
+}
